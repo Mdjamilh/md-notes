@@ -25,7 +25,7 @@ describe("renderMarkdown", () => {
     expect(el.querySelectorAll("td")).toHaveLength(2);
     const boxes = el.querySelectorAll<HTMLInputElement>("input[type=checkbox]");
     expect(boxes).toHaveLength(2);
-    expect(boxes[0].checked).toBe(true);
+    expect(boxes[0]?.checked).toBe(true);
   });
 });
 

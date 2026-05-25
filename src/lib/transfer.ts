@@ -59,18 +59,19 @@ export function splitFrontMatter(text: string): { meta: FrontMatter; body: strin
   const fields = new Map<string, string>();
   let listKey: string | null = null;
   const lists = new Map<string, string[]>();
-  for (const line of m[1].split("\n")) {
+  for (const line of (m[1] ?? "").split("\n")) {
     const item = /^\s+-\s+(.*)$/.exec(line);
     if (item && listKey) {
-      lists.get(listKey)?.push(item[1]);
+      lists.get(listKey)?.push(item[1] ?? "");
       continue;
     }
     const kv = /^([A-Za-z_][\w-]*):\s*(.*)$/.exec(line);
     if (!kv) continue;
-    const key = kv[1].toLowerCase();
-    listKey = kv[2] === "" ? key : null;
+    const [, rawKey = "", value = ""] = kv;
+    const key = rawKey.toLowerCase();
+    listKey = value === "" ? key : null;
     if (listKey) lists.set(key, []);
-    else fields.set(key, kv[2]);
+    else fields.set(key, value);
   }
 
   const tagList = lists.get("tags");

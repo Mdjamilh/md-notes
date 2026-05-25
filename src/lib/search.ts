@@ -29,9 +29,9 @@ export function parseQuery(query: string): ParsedQuery {
       if (t) terms.push(t);
       continue;
     }
-    const word = m[2].toLowerCase();
+    const word = (m[2] ?? "").toLowerCase();
     const tag = /^(?:tag:|#)(.+)$/.exec(word);
-    if (tag) tags.push(tag[1]);
+    if (tag?.[1]) tags.push(tag[1]);
     else if (word !== "tag:" && word !== "#") terms.push(word);
   }
   return { terms: unique(terms), tags: unique(tags) };

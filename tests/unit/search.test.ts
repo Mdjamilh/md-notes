@@ -44,7 +44,7 @@ describe("searchNotes", () => {
   });
 
   it("ranks a title match above a body-only match", () => {
-    const [first] = searchNotes(notes, "grocer");
+    const first = searchNotes(notes, "grocer")[0]!;
     expect(first.note.id).toBe("a");
     expect(first.title).toBe("Groceries");
   });
