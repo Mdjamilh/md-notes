@@ -76,7 +76,7 @@ describe("import", () => {
   });
 
   it("normalizes Windows line endings and a BOM", () => {
-    expect(noteFromMarkdown("﻿---\r\ntags: [a]\r\n---\r\nline1\r\nline2").body).toBe("line1\nline2");
+    expect(noteFromMarkdown("\uFEFF---\r\ntags: [a]\r\n---\r\nline1\r\nline2").body).toBe("line1\nline2");
   });
 
   it("uses the file name as the title of an empty file", () => {

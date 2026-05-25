@@ -22,7 +22,7 @@ export function fileNameFor(note: Note): string {
   const title = deriveTitle(note.body);
   const slug = (title === UNTITLED ? "untitled" : title)
     .normalize("NFKD")
-    .replace(/[̀-ͯ]/g, "")
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
@@ -84,7 +84,7 @@ export function splitFrontMatter(text: string): { meta: FrontMatter; body: strin
 
 /** Turns the text of an imported file into a new note (with a fresh id). */
 export function noteFromMarkdown(text: string, fileName = "", now = Date.now()): Note {
-  const normalized = text.replace(/^﻿/, "").replace(/\r\n?/g, "\n");
+  const normalized = text.replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n");
   const { meta, body } = splitFrontMatter(normalized);
   const fallbackTitle = fileName.replace(ACCEPTED, "").trim();
   const finalBody = body.trim() === "" && fallbackTitle ? `# ${fallbackTitle}\n` : body;
