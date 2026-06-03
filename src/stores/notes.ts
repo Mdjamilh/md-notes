@@ -153,9 +153,8 @@ export const useNotesStore = defineStore("notes", () => {
   function toggleTag(tag: string): void {
     const token = `tag:${tag}`;
     const parts = query.value.split(/\s+/).filter(Boolean);
-    const lower = parts.map((p) => p.toLowerCase());
-    const has = lower.includes(token) || lower.includes(`#${tag}`);
-    query.value = (has ? parts.filter((p, i) => lower[i] !== token && lower[i] !== `#${tag}`) : [...parts, token]).join(" ");
+    const isThisTag = (p: string) => [token, `#${tag}`].includes(p.toLowerCase());
+    query.value = (parts.some(isThisTag) ? parts.filter((p) => !isThisTag(p)) : [...parts, token]).join(" ");
   }
 
   return {
