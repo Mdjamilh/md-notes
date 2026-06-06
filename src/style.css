@@ -1,79 +1,187 @@
+/* Theme tokens. Light is the default; dark follows the OS unless the user
+   picks a theme, which sets data-theme on <html>. */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  color-scheme: light;
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --surface-2: #f0efec;
+  --border: #dedcd6;
+  --text: #1f1f1d;
+  --text-muted: #63615c;
+  --accent: #2f6f5e;
+  --accent-contrast: #ffffff;
+  --accent-soft: #dcefe8;
+  --mark: #ffe58a;
+  --mark-text: #1f1f1d;
+  --danger: #b3261e;
+  --warning-bg: #fff4d6;
+  --warning-text: #5c4300;
+  --code-bg: #f0efec;
+  --focus: #1b5fd1;
+  --shadow: 0 1px 2px rgb(0 0 0 / 6%), 0 4px 16px rgb(0 0 0 / 6%);
+  --radius: 8px;
+  --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+/* The dark palette appears twice: once for an explicit choice and once for
+   the OS preference. Plain CSS has no way to share a block between them. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #151614;
+  --surface: #1c1d1b;
+  --surface-2: #252623;
+  --border: #363833;
+  --text: #e9e8e4;
+  --text-muted: #a3a19b;
+  --accent: #6cc4a8;
+  --accent-contrast: #0e1f19;
+  --accent-soft: #1f3a31;
+  --mark: #806a12;
+  --mark-text: #fff8dc;
+  --danger: #ff8a80;
+  --warning-bg: #3a3014;
+  --warning-text: #f5e1a4;
+  --code-bg: #252623;
+  --focus: #8ab4ff;
+  --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 4px 16px rgb(0 0 0 / 30%);
 }
-a:hover {
-  color: #535bf2;
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #151614;
+    --surface: #1c1d1b;
+    --surface-2: #252623;
+    --border: #363833;
+    --text: #e9e8e4;
+    --text-muted: #a3a19b;
+    --accent: #6cc4a8;
+    --accent-contrast: #0e1f19;
+    --accent-soft: #1f3a31;
+    --mark: #806a12;
+    --mark-text: #fff8dc;
+    --danger: #ff8a80;
+    --warning-bg: #3a3014;
+    --warning-text: #f5e1a4;
+    --code-bg: #252623;
+    --focus: #8ab4ff;
+    --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 4px 16px rgb(0 0 0 / 30%);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.5 var(--font-ui);
+  -webkit-font-smoothing: antialiased;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+mark {
+  background: var(--mark);
+  color: var(--mark-text);
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  white-space: nowrap;
 }
 
-.card {
-  padding: 2em;
+.btn:hover:not(:disabled) {
+  background: var(--surface-2);
 }
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--accent);
+  filter: brightness(1.08);
+}
+
+.btn-danger {
+  color: var(--danger);
+}
+
+.btn-ghost {
+  border-color: transparent;
+  background: transparent;
+}
+
+.input {
+  width: 100%;
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+kbd {
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+  padding: 1px 5px;
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--surface-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
   }
 }
