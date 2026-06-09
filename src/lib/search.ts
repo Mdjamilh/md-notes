@@ -87,6 +87,23 @@ export function searchNotes(notes: readonly Note[], query: string): SearchResult
 }
 
 /**
+ * Plain text for list snippets. Inline markers are removed outright so
+ * "**bold**." stays "bold." rather than "bold .", block markers become
+ * spaces, and hyphens inside words survive.
+ */
+export function stripMarkdown(text: string): string {
+  return text
+    .replace(/!?\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .replace(/[*`~]+/g, "")
+    .replace(/(?<!\w)_+|_+(?!\w)/g, "")
+    .replace(/(^|\s)(#{1,6}|>|[-+]|\d+[.)])(?=\s)/g, " ")
+    .replace(/\[[ xX]\]/g, " ")
+    .replace(/\|/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
  * A short one-line excerpt of the body. With search terms, the excerpt is
  * centred on the first match so the highlight is visible in the list.
  */
@@ -95,10 +112,7 @@ export function makeSnippet(body: string, terms: readonly string[], length = 120
   const firstContent = lines.findIndex((l) => l.trim() !== "");
   // Skip the line used as the title so the snippet adds information.
   const rest = lines.slice(firstContent + 1).join(" ");
-  const flat = rest
-    .replace(/[#>*_`~[\]()|-]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
+  const flat = stripMarkdown(rest);
   if (!flat) return "";
 
   const low = flat.toLowerCase();

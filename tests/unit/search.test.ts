@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Note } from "../../src/lib/notes";
-import { makeSnippet, parseQuery, searchNotes } from "../../src/lib/search";
+import { makeSnippet, parseQuery, searchNotes, stripMarkdown } from "../../src/lib/search";
 
 function note(id: string, body: string, tags: string[] = [], updatedAt = 0): Note {
   return { id, body, tags, createdAt: 0, updatedAt };
@@ -65,6 +65,22 @@ describe("searchNotes", () => {
     expect(searchNotes(special, "(approx.)")).toHaveLength(1);
     expect(searchNotes(special, "$5.00")).toHaveLength(1);
     expect(searchNotes(special, ".*")).toHaveLength(0);
+  });
+});
+
+describe("stripMarkdown", () => {
+  it("removes inline markers without leaving gaps before punctuation", () => {
+    expect(stripMarkdown("stay **in this browser**. Then _go_.")).toBe("stay in this browser. Then go.");
+  });
+
+  it("keeps hyphens and underscores inside words", () => {
+    expect(stripMarkdown("an e-mail about snake_case - done")).toBe("an e-mail about snake_case done");
+  });
+
+  it("drops block markers, task boxes, table pipes and link targets", () => {
+    expect(stripMarkdown("## Head\n> quote\n1. one\n- [x] task\n| a | b |\n[site](https://x.y) ![alt](i.png)")).toBe(
+      "Head quote one task a b site alt",
+    );
   });
 });
 
