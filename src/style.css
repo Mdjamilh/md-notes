@@ -185,3 +185,8 @@ kbd {
     transition: none !important;
   }
 }
+
+.input:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
