@@ -42,6 +42,25 @@ test("create a note, see the preview, and find it again after a reload", async (
   expect(errors).toEqual([]);
 });
 
+test("local AI is off by default and fails gracefully when Ollama is not running", async ({ page }) => {
+  // Simulate "nothing listening" so the result doesn't depend on this machine.
+  await page.route("http://localhost:11434/**", (route) => route.abort("connectionrefused"));
+  await page.goto("/");
+  await expect(page.getByRole("button", { name: "Summarize (local)" })).toHaveCount(0);
+
+  await page.getByRole("button", { name: "Settings" }).click();
+  const dialog = page.getByRole("dialog", { name: "Settings" });
+  await expect(dialog.getByText("This site has no AI of its own")).toBeVisible();
+  await dialog.getByTestId("ai-toggle").check();
+  await dialog.getByRole("button", { name: "Close settings" }).click();
+  await expect(dialog).toBeHidden();
+
+  // On phones the list shows first; open the welcome note to reach the editor.
+  await page.getByRole("button", { name: /Welcome to md-notes/ }).click();
+  await page.getByRole("button", { name: "Summarize (local)" }).click();
+  await expect(page.getByRole("alert")).toContainText("Could not reach Ollama at http://localhost:11434");
+});
+
 test("search highlights matches in the list", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "New note" }).first().click();
