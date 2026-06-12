@@ -99,6 +99,8 @@ export function stripMarkdown(text: string): string {
     .replace(/(^|\s)(#{1,6}|>|[-+]|\d+[.)])(?=\s)/g, " ")
     .replace(/\[[ xX]\]/g, " ")
     .replace(/\|/g, " ")
+    // Table separator rows and horizontal rules: "---", ":--:", "***".
+    .replace(/(^|\s):?-{3,}:?(?=\s|$)/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 }

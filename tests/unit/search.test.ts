@@ -73,6 +73,10 @@ describe("stripMarkdown", () => {
     expect(stripMarkdown("stay **in this browser**. Then _go_.")).toBe("stay in this browser. Then go.");
   });
 
+  it("drops table separator rows and horizontal rules", () => {
+    expect(stripMarkdown("| Action | Keys |\n| --- | :---: |\n| New | Alt |\n\n---\nend")).toBe("Action Keys New Alt end");
+  });
+
   it("keeps hyphens and underscores inside words", () => {
     expect(stripMarkdown("an e-mail about snake_case - done")).toBe("an e-mail about snake_case done");
   });
