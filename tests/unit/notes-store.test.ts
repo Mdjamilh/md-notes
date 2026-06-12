@@ -82,8 +82,12 @@ describe("notes store", () => {
   it("bumps updatedAt on edit so the note moves to the top", async () => {
     const store = await freshStore();
     const a = await store.create("# A");
-    await store.create("# B");
-    a.updatedAt = 0;
+    const b = await store.create("# B");
+    // Fixed past timestamps: on a fast machine all three steps share one millisecond.
+    const byId = (id: string) => store.notes.find((n) => n.id === id)!;
+    byId(a.id).updatedAt = 1;
+    byId(b.id).updatedAt = 2;
+    expect(store.results[0]?.note.id).toBe(b.id);
     store.update(a.id, { body: "# A2" });
     expect(store.results[0]?.note.id).toBe(a.id);
     await store.flush();
