@@ -80,6 +80,7 @@ describe("notes store", () => {
   });
 
   it("bumps updatedAt on edit so the note moves to the top", async () => {
+    localStorage.setItem("md-notes:seeded", "1"); // no welcome note competing for the top
     const store = await freshStore();
     const a = await store.create("# A");
     const b = await store.create("# B");
